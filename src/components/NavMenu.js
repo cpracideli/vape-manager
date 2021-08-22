@@ -29,7 +29,9 @@ const NavMenu = (props) => {
 
   return (
     <div>
+        
         <AppBar position="fixed" color="primary" style={{top: "auto", bottom: 0}}>
+        
         <BottomNavigation
             value={value}
             onChange={(event, newValue) => {
