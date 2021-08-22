@@ -3,7 +3,7 @@ import React from 'react';
 const Flavors = () =>{
     return(
         <>
-            Falvors
+            Flavors
         </>
     );
 }

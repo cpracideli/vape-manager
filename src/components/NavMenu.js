@@ -44,7 +44,9 @@ const NavMenu = (props) => {
                     label={o.title} 
                     icon={o.icon}
                     component={Link}
-                    to={o.page} />
+                    to={o.page}
+                   
+                     />
                     
             )}
         </BottomNavigation>

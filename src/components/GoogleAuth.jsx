@@ -60,7 +60,6 @@ const GoogleAuth = ({ dispatch, isSignedIn, userId,userEmail, userFullName, user
 };
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return { isSignedIn: state.auth.isSignedIn,
         userId: state.auth.userId,
         userEmail: state.auth.userEmail,

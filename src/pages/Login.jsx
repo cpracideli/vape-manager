@@ -1,36 +1,34 @@
-import { GoogleLogin } from 'react-google-login'
-import React, {useState} from 'react';
-
-const clientId = '150401981001-6484c0p7tv6lg5q5jivg4obs4ql25kmt.apps.googleusercontent.com';
-const clientSecret = 'lWxhr5teQzYGLnjs5PqcexJm';
+import React from 'react';
+import GoogleAuth from '../components/GoogleAuth';
+import { useSelector } from 'react-redux';
 
 const Login = () =>{
-    const [email, setEmail] = useState('');
+    const auth = useSelector((state) => state.auth)
+    console.log(auth)
 
-    const onSuccess = (res) =>{
-        console.log('[login success] current user:', res.profileObj)
-        setEmail(res.profileObj.name + " (" + res.profileObj.email +")")    
+    const renderLogin=() =>{
+        return(
+        <>
+            <p>Some funcions is only available after login. Make login with google to access complete tool</p>
+            <GoogleAuth/>
+        </>
+        );
     }
-    const onFailure = (res) =>{
-        console.log('[login failure] res:', res)    
+    const renderLogout=() =>{
+        return(
+        <>
+            <p>Hello {auth.userFullName}, welcome to Vape Tool.</p>
+            <GoogleAuth/>
+        </>
+        );
     }
 
     return (
         <>
-            <GoogleLogin
-                clientId={clientId}
-                
-                buttonText="Google Login"
-                onSuccess={onSuccess}
-                onFailure={onFailure}
-                cookiePolicy={'single_host_origin'}
-                isSignedIn={true}
-            />
-
-            <p>Autenticated user: {email}</p>
+            {auth.isSignedIn?renderLogout(): renderLogin()}
+            
         </>
     )
-
 }
 
 export default Login;

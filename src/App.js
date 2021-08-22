@@ -1,7 +1,8 @@
 import React, { Component, useState } from 'react';
-import { Route } from 'react-router';
-import { Provider, connect } from 'react-redux';
+import { Route, Redirect } from 'react-router';
+import { Provider, connect, Selector, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Login from './pages/Login';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import Flavors from './pages/Flavors';
@@ -10,25 +11,35 @@ import Juices from './pages/Juices';
 import { ThemeProvider } from "@material-ui/core/styles";
 
 import { clearTheme } from './styles/themes'
+import * as store from './framework/redux/ApplicationStore'
 
-import { googleOAuth2 } from './actions/google'
-import { GoogleLogout, GoogleLogin } from 'react-google-login';
-import { Box } from '@material-ui/core';
-import GoogleAuth from './components/GoogleAuth';
-//import GoogleAuth from './components/GoogleAuth2';
 
-const clientId = '150401981001-6484c0p7tv6lg5q5jivg4obs4ql25kmt.apps.googleusercontent.com';
+const PrivateRoute = ({component: Component, authed, ...rest})=>{
+  return (
+    <Route
+      {...rest}
+      render={(props) => authed === true
+        ? <Component {...props} />
+        : <Redirect to={{pathname: '/login'}} />}
+    />
+  )
+}
 
 const App = () => {
-
+  const auth = useSelector((state) => state.auth)
   return (
       
 
     <ThemeProvider theme={clearTheme}>
       <Layout>
-        <Route exact path='/flavors' component={Flavors} />
+      <Route path='/login' component={Login} />
+      <PrivateRoute authed={auth.isSignedIn} path='/flavors' component={Flavors} />
+
+        {/* <Route exact path='/flavors' component={Flavors} /> */}
         <Route path='/calculator' component={Calculator} />
         <Route path='/juices' component={Juices} />
+        
+        
       </Layout>
 
 
