@@ -8,7 +8,7 @@ import {
     makeStyles,
     Grid,
     Switch,
-    FormControlLabel, 
+    FormControlLabel,
     TableContainer,
     TableRow,
     Table,
@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 
 const Calculator = (props) => {
     const classes = useStyles();
-    const redTheme = createTheme({ palette: { primary: {main: '#E65B65'} } })
+    const redTheme = createTheme({ palette: { primary: { main: '#E65B65' } } })
     const [amountMl, setAmountMl] = useState(0);
     const [nicotineTarget, setNicotineTarget] = useState(0);
     const [baseVg, setBaseVg] = useState(70);
@@ -68,50 +68,70 @@ const Calculator = (props) => {
         }
     }
 
-    const handleCalculate = () =>{
-        var totalPG = amountMl * (basePg/100);
-        var totalVG = amountMl * (baseVg/100);
+    const handleCalculate = () => {
+        //IF(nicotineTarget > 0 && amountMl > 0){ (nicotineTarget * amountMl) / nicotineStrength} else { 0}
+
+        var totalPG = amountMl * (basePg / 100);
+        var totalVG = amountMl * (baseVg / 100);
 
         var auxRecipe = [];
-        var nicotineBaseName = nicotineIsPg? "PG":"VG";
+        var nicotineBaseName = nicotineIsPg ? "PG" : "VG";
+        var tempSum = 0;
+        var nicotineMl = 0;
 
-        auxRecipe.push({ 
-            flavor: "Nicotine base (" + nicotineBaseName + ")", 
-            amount: 0, 
-            g: parseFloat(0).toFixed(2),
-            ml: parseFloat(0).toFixed(2)
+        if (nicotineTarget > 0 && amountMl > 0) {
+            nicotineMl = nicotineTarget * amountMl / nicotineStrength;
+        }
+        else {
+            nicotineMl = 0;
+        }
+
+        auxRecipe.push({
+            flavor: "Nicotine base (" + nicotineBaseName + ")",
+            amount: 0,
+            g: parseFloat(nicotineMl).toFixed(2),
+            ml: parseFloat(nicotineMl).toFixed(2)
         });
 
-        if(flavors.length > 0 && amountMl > 0){
+        if (flavors.length > 0 && amountMl > 0) {
             flavors.map(f => {
-                auxRecipe.push({ 
-                    flavor: f.flavor, 
-                    amount: f.amount, 
-                    g: parseFloat(f.amount*1.05).toFixed(2),
-                    ml: parseFloat(f.amount * (amountMl/100)).toFixed(2)
+                auxRecipe.push({
+                    flavor: f.flavor,
+                    amount: f.amount,
+                    g: parseFloat(f.amount * 1.05).toFixed(2),
+                    ml: parseFloat(f.amount * (amountMl / 100)).toFixed(2)
                 });
                 //totalPG = totalPg - (f.amount * (amountMl/100));
             })
         }
-        
-        auxRecipe.push({ 
-            flavor: "PG", 
-            amount: basePg, 
-            g: parseFloat((amountMl * (basePg/100))*pgWeight).toFixed(2),
-            ml: parseFloat(amountMl * (basePg/100) * (amountMl/100)).toFixed(2)
+
+  
+
+        //ADD PG
+        tempSum = auxRecipe.map(r => r.flavor !== "PG" && r.flavor !== "VG" ? parseFloat(r.ml): 0).reduce((a, b) => a + b, 0);
+        console.log(tempSum)
+        auxRecipe.push({
+            flavor: "PG",
+            amount: basePg,
+            g: parseFloat((amountMl * (basePg / 100)) * pgWeight).toFixed(2),
+            ml: (parseFloat(amountMl * (basePg/100)).toFixed(2)) - tempSum
         });
-        auxRecipe.push({ 
-            flavor: "VG", 
-            amount: baseVg, 
-            g: parseFloat(amountMl * (baseVg/100)*vgWeight).toFixed(2),
-            ml: parseFloat(amountMl * (baseVg/100) * (amountMl/100)).toFixed(2)
+
+
+        tempSum = auxRecipe.map(r => r.flavor !== "PG" && r.flavor !== "VG" ? parseFloat(r.ml): 0).reduce((a, b) => a + b, 0);
+        console.log(tempSum)
+        auxRecipe.push({
+            flavor: "VG",
+            amount: baseVg,
+            g: parseFloat(amountMl * (baseVg / 100) * vgWeight).toFixed(2),
+            ml: amountMl - auxRecipe.map(r => r.flavor !== "VG" ? parseFloat(r.ml): 0).reduce((a, b) => a + b, 0) //- parseFloat(amountMl * (baseVg / 100)).toFixed(2)
         });
 
         auxRecipe.push({ 
             flavor: <Box fontWeight="fontWeightBold">SUM</Box>, 
             amount: <Box fontWeight="fontWeightBold">0</Box>, 
-            g: <Box fontWeight="fontWeightBold">0</Box>, 
-            ml: <Box fontWeight="fontWeightBold">0</Box>, 
+            g: <Box fontWeight="fontWeightBold">{auxRecipe.map(r => parseFloat(r.g) ).reduce((a, b) => a + b, 0)}</Box>, 
+            ml: <Box fontWeight="fontWeightBold">{auxRecipe.map(r => parseFloat(r.ml) ).reduce((a, b) => a + b, 0)}</Box>, 
         });
 
         setRecipe(auxRecipe);
@@ -256,7 +276,7 @@ const Calculator = (props) => {
                                                         value={row.flavor}
                                                         onChange={e => {
                                                             flavors[i].flavor = e.target.value;
-                                                            setFlavors( [...flavors] )
+                                                            setFlavors([...flavors])
                                                             handleCalculate()
                                                         }}
                                                     />
@@ -269,7 +289,7 @@ const Calculator = (props) => {
                                                         type="number"
                                                         onChange={e => {
                                                             flavors[i].amount = e.target.value;
-                                                            setFlavors( [...flavors] )
+                                                            setFlavors([...flavors])
                                                             handleCalculate()
                                                         }}
                                                     />
