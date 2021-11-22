@@ -10,21 +10,25 @@ import GoogleAuth from '../GoogleAuth';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      flexGrow: 1,
+        flexGrow: 1,
     },
     menuButton: {
-      marginRight: theme.spacing(2),
+        marginRight: theme.spacing(2),
     },
     loginButton: {
         marginRight: {
             position: 'relative',
             marginLeft: 'auto',
         }
-      },
-    title: {
-      flexGrow: 1,
     },
-  }));
+    textAlign:{
+        position: "relative",
+        top: theme.spacing.unit,
+    },
+    title: {
+        flexGrow: 1,
+    },
+}));
 
 const Navbar = (props) => {
     const classes = useStyles();
@@ -47,25 +51,25 @@ const Navbar = (props) => {
         }
     ]
 
-    
+
 
     return (
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
                     <Box display='flex' flexGrow={1}>
-                    <IconButton className={classes.menuButton} edge="start" color="inherit" aria-label="menu">
-                        <HiMenu />
-                    </IconButton>
-                    <Typography variant="h6">
+                        <IconButton className={classes.menuButton} edge="start" color="inherit" aria-label="menu">
+                            <HiMenu />
+                        </IconButton>
+                        <Typography variant="h6" className={classes.textAlign}>
                             Vape Tool
                         </Typography>
                     </Box>
-                    
-                        <div className={classes.loginButton}>
-                            <GoogleAuth />
-                        </div>
-                        
+
+                    <div className={classes.loginButton}>
+                        <GoogleAuth />
+                    </div>
+
 
 
 

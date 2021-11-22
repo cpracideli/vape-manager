@@ -105,278 +105,277 @@ const Calculator = (props) => {
             })
         }
 
-  
+
 
         //ADD PG
-        tempSum = auxRecipe.map(r => r.flavor !== "PG" && r.flavor !== "VG" ? parseFloat(r.ml): 0).reduce((a, b) => a + b, 0);
+        tempSum = auxRecipe.map(r => r.flavor !== "PG" && r.flavor !== "VG" ? parseFloat(r.ml) : 0).reduce((a, b) => a + b, 0);
         console.log(tempSum)
         auxRecipe.push({
             flavor: "PG",
             amount: basePg,
             g: parseFloat((amountMl * (basePg / 100)) * pgWeight).toFixed(2),
-            ml: (parseFloat(amountMl * (basePg/100)).toFixed(2)) - tempSum
+            ml: (parseFloat(amountMl * (basePg / 100)).toFixed(2)) - tempSum
         });
 
 
-        tempSum = auxRecipe.map(r => r.flavor !== "PG" && r.flavor !== "VG" ? parseFloat(r.ml): 0).reduce((a, b) => a + b, 0);
+        tempSum = auxRecipe.map(r => r.flavor !== "PG" && r.flavor !== "VG" ? parseFloat(r.ml) : 0).reduce((a, b) => a + b, 0);
         console.log(tempSum)
         auxRecipe.push({
             flavor: "VG",
             amount: baseVg,
             g: parseFloat(amountMl * (baseVg / 100) * vgWeight).toFixed(2),
-            ml: amountMl - auxRecipe.map(r => r.flavor !== "VG" ? parseFloat(r.ml): 0).reduce((a, b) => a + b, 0) //- parseFloat(amountMl * (baseVg / 100)).toFixed(2)
+            ml: amountMl - auxRecipe.map(r => r.flavor !== "VG" ? parseFloat(r.ml) : 0).reduce((a, b) => a + b, 0) //- parseFloat(amountMl * (baseVg / 100)).toFixed(2)
         });
 
-        auxRecipe.push({ 
-            flavor: <Box fontWeight="fontWeightBold">SUM</Box>, 
-            amount: <Box fontWeight="fontWeightBold">0</Box>, 
-            g: <Box fontWeight="fontWeightBold">{auxRecipe.map(r => parseFloat(r.g) ).reduce((a, b) => a + b, 0)}</Box>, 
-            ml: <Box fontWeight="fontWeightBold">{auxRecipe.map(r => parseFloat(r.ml) ).reduce((a, b) => a + b, 0)}</Box>, 
+        auxRecipe.push({
+            flavor: <Box fontWeight="fontWeightBold">SUM</Box>,
+            amount: <Box fontWeight="fontWeightBold">0</Box>,
+            g: <Box fontWeight="fontWeightBold">{auxRecipe.map(r => parseFloat(r.g)).reduce((a, b) => a + b, 0)}</Box>,
+            ml: <Box fontWeight="fontWeightBold">{auxRecipe.map(r => parseFloat(r.ml)).reduce((a, b) => a + b, 0)}</Box>,
         });
 
         setRecipe(auxRecipe);
     }
 
     return (
-        <>
-            <Box mt={2}>
-                <Grid>
-                    <Grid item sm={4}>
-                        <Box m={2}>
-                            <Alert icon={false} severity="info">Juice Properties</Alert>
-                            <Grid container direction="column" spacing={1}>
-                                <Grid item>
-                                    <TextField
-                                        label="Amount of Juice"
-                                        type="number"
-                                        variant="outlined"
-                                        size="small"
-                                        fullWidth
-                                        value={amountMl}
-                                        onChange={e => {
-                                            setAmountMl(e.target.value);
-                                            handleCalculate();
-                                        }}
-                                        InputProps={{
-                                            endAdornment: <InputAdornment position="end">ml</InputAdornment>
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <TextField
-                                        label="Nicotine Target"
-                                        type="number"
-                                        variant="outlined"
-                                        size="small"
-                                        fullWidth
-                                        value={nicotineTarget}
-                                        onChange={e => {
-                                            setNicotineTarget(e.target.value);
-                                            handleCalculate();
-                                        }}
-                                        InputProps={{
-                                            endAdornment: <InputAdornment position="end">mg/ml</InputAdornment>
-                                        }}
-                                    />
-                                </Grid>
-                            </Grid>
-
-                            <Typography id="discrete-slider" gutterBottom>
-                                VG/PG Ratio: {baseVg} / {basePg}
-                            </Typography>
-                            <Slider
-                                defaultValue={baseVg}
-                                value={baseVg}
-                                onChange={(e, val) => {
-                                    handChangeNicotine(val, 'vg')
-                                    handleCalculate();
-                                }}
-                                aria-labelledby="discrete-slider"
-                                valueLabelDisplay="auto"
-                                step={5}
-                                marks
-                                min={0}
-                                max={100}
-                            />
-                            <Slider
-                                defaultValue={basePg}
-                                value={basePg}
-                                onChange={(e, val) => {
-                                    handChangeNicotine(val, 'pg')
-                                    handleCalculate();
-                                }}
-                                aria-labelledby="discrete-slider"
-                                valueLabelDisplay="auto"
-                                step={5}
-                                marks
-                                min={0}
-                                max={100}
-                            />
-                        </Box>
-
-                        <Box m={2} mt={1}>
-                            <Alert icon={false} severity="warning">Nicotine base</Alert>
-                            <TextField
-                                label="Nicotine Strength"
-                                type="number"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                value={nicotineStrength}
-                                onChange={e => {
-                                    setNicotineStrength(e.target.value)
-                                    handleCalculate();
-                                }}
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">mg/ml</InputAdornment>
-                                }}
-
-                            />
-                            <FormControlLabel
-
-                                control={
-                                    <Switch
-                                        checked={nicotineIsPg}
-                                        onChange={e => {
-                                            setNicotineIsPg(!nicotineIsPg)
-                                            handleCalculate();
-                                        }}
-                                        color="primary"
-                                    />
-                                }
-                                label={nicotineIsPg ? "Select nicotine base: PG" : "Select nicotine base: VG"}
-                                labelPlacement="start"
-                            />
-
-
-
-                        </Box>
-                    </Grid>
-
-                    <Grid item sm={4}>
-                        <Box m={2}>
-                            <Alert icon={false} severity="success">
-                                Flavoring
-                            </Alert>
-                            <TableContainer component={Paper}>
-                                <Table className={classes.table} size="small">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Flavor</TableCell>
-                                            <TableCell>(%)</TableCell>
-                                            <TableCell align="center">Delete</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {flavors.map((row, i) => (
-                                            <TableRow key={row.id}>
-                                                <TableCell component="th" scope="row">
-                                                    <TextField
-                                                        size="small"
-                                                        value={row.flavor}
-                                                        onChange={e => {
-                                                            flavors[i].flavor = e.target.value;
-                                                            setFlavors([...flavors])
-                                                            handleCalculate()
-                                                        }}
-                                                    />
-                                                </TableCell>
-
-                                                <TableCell align="right">
-                                                    <TextField
-                                                        size="small"
-                                                        value={row.amount}
-                                                        type="number"
-                                                        onChange={e => {
-                                                            flavors[i].amount = e.target.value;
-                                                            setFlavors([...flavors])
-                                                            handleCalculate()
-                                                        }}
-                                                    />
-                                                </TableCell>
-
-                                                <TableCell align="center">
-                                                    <MuiThemeProvider theme={redTheme}>
-                                                        <Button
-                                                            color="primary"
-                                                            variant="contained"
-                                                            onClick={() => {
-                                                                console.log(row.id);
-                                                                //flavors.splice(row.id, 1);
-                                                                flavors.splice(flavors.findIndex(function (r) {
-                                                                    return r.id === row.id;
-                                                                }), 1);
-                                                                setFlavors([...flavors]);
-                                                                handleCalculate()
-                                                            }}
-                                                        >
-                                                            <BsTrash />
-                                                        </Button>
-                                                    </MuiThemeProvider>
-
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                            <Box mt={1} display="flex" flexDirection="row-reverse">
-                                <Button
-
+        <Box mt={2}>
+            <Grid container spacing={3}>
+                <Grid item sm={4}>
+                    <Box m={2}>
+                        <Alert icon={false} severity="info">Juice Properties</Alert>
+                        <Grid container direction="column" spacing={1}>
+                            <Grid item>
+                                <TextField
+                                    label="Amount of Juice"
+                                    type="number"
+                                    variant="outlined"
                                     size="small"
-                                    color="secondary"
-                                    variant="contained"
-                                    onClick={() => {
-
-                                        setFlavors([...flavors, { id: flavorCounter + 1, flavor: 'Flavor' + (flavorCounter + 1), amount: 0 }]);
-                                        setFlavorCounter(flavorCounter + 1);
+                                    fullWidth
+                                    value={amountMl}
+                                    onChange={e => {
+                                        setAmountMl(e.target.value);
                                         handleCalculate();
-                                    }}>
-                                    + Add
-                                </Button>
-                            </Box>
+                                    }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">ml</InputAdornment>
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    label="Nicotine Target"
+                                    type="number"
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    value={nicotineTarget}
+                                    onChange={e => {
+                                        setNicotineTarget(e.target.value);
+                                        handleCalculate();
+                                    }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">mg/ml</InputAdornment>
+                                    }}
+                                />
+                            </Grid>
+                        </Grid>
+
+                        <Typography id="discrete-slider" gutterBottom>
+                            VG/PG Ratio: {baseVg} / {basePg}
+                        </Typography>
+                        <Slider
+                            defaultValue={baseVg}
+                            value={baseVg}
+                            onChange={(e, val) => {
+                                handChangeNicotine(val, 'vg')
+                                handleCalculate();
+                            }}
+                            aria-labelledby="discrete-slider"
+                            valueLabelDisplay="auto"
+                            step={5}
+                            marks
+                            min={0}
+                            max={100}
+                        />
+                        <Slider
+                            defaultValue={basePg}
+                            value={basePg}
+                            onChange={(e, val) => {
+                                handChangeNicotine(val, 'pg')
+                                handleCalculate();
+                            }}
+                            aria-labelledby="discrete-slider"
+                            valueLabelDisplay="auto"
+                            step={5}
+                            marks
+                            min={0}
+                            max={100}
+                        />
+                    </Box>
+
+                    <Box m={2} mt={1}>
+                        <Alert icon={false} severity="warning">Nicotine base</Alert>
+                        <TextField
+                            label="Nicotine Strength"
+                            type="number"
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            value={nicotineStrength}
+                            onChange={e => {
+                                setNicotineStrength(e.target.value)
+                                handleCalculate();
+                            }}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">mg/ml</InputAdornment>
+                            }}
+
+                        />
+                        <FormControlLabel
+
+                            control={
+                                <Switch
+                                    checked={nicotineIsPg}
+                                    onChange={e => {
+                                        setNicotineIsPg(!nicotineIsPg)
+                                        handleCalculate();
+                                    }}
+                                    color="primary"
+                                />
+                            }
+                            label={nicotineIsPg ? "Select nicotine base: PG" : "Select nicotine base: VG"}
+                            labelPlacement="start"
+                            disabled
+                        />
 
 
 
-                        </Box>
-                    </Grid>
-
-                    <Grid item sm={4}>
-                        <Box m={2} mt={6}>
-                            <Alert icon={false} variant="filled" severity="info">
-                                Recipe
-                            </Alert>
-                            <TableContainer component={Paper}>
-                                <Table className={classes.table} size="small">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Flavor</TableCell>
-                                            <TableCell>(%)</TableCell>
-                                            <TableCell>(g)</TableCell>
-                                            <TableCell>(ml)</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {recipe.map((row, i) => (
-                                            <TableRow key={row.id}>
-                                                <TableCell component="th" scope="row">{row.flavor}</TableCell>
-                                                <TableCell component="th" scope="row">{row.amount}</TableCell>
-                                                <TableCell component="th" scope="row">{row.g}</TableCell>
-                                                <TableCell component="th" scope="row">{row.ml}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Box>
-                    </Grid>
+                    </Box>
                 </Grid>
 
+                <Grid item sm={4}>
+                    <Box m={2}>
+                        <Alert icon={false} severity="success">
+                            Flavoring
+                        </Alert>
+                        <TableContainer component={Paper}>
+                            <Table className={classes.table} size="small">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Flavor</TableCell>
+                                        <TableCell>(%)</TableCell>
+                                        <TableCell align="center">Delete</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {flavors.map((row, i) => (
+                                        <TableRow key={row.id}>
+                                            <TableCell component="th" scope="row">
+                                                <TextField
+                                                    size="small"
+                                                    value={row.flavor}
+                                                    onChange={e => {
+                                                        flavors[i].flavor = e.target.value;
+                                                        setFlavors([...flavors])
+                                                        handleCalculate()
+                                                    }}
+                                                />
+                                            </TableCell>
+
+                                            <TableCell align="right">
+                                                <TextField
+                                                    size="small"
+                                                    value={row.amount}
+                                                    type="number"
+                                                    onChange={e => {
+                                                        flavors[i].amount = e.target.value;
+                                                        setFlavors([...flavors])
+                                                        handleCalculate()
+                                                    }}
+                                                />
+                                            </TableCell>
+
+                                            <TableCell align="center">
+                                                <MuiThemeProvider theme={redTheme}>
+                                                    <Button
+                                                        color="primary"
+                                                        variant="contained"
+                                                        onClick={() => {
+                                                            console.log(row.id);
+                                                            //flavors.splice(row.id, 1);
+                                                            flavors.splice(flavors.findIndex(function (r) {
+                                                                return r.id === row.id;
+                                                            }), 1);
+                                                            setFlavors([...flavors]);
+                                                            handleCalculate()
+                                                        }}
+                                                    >
+                                                        <BsTrash />
+                                                    </Button>
+                                                </MuiThemeProvider>
+
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <Box mt={1} display="flex" flexDirection="row-reverse">
+                            <Button
+
+                                size="small"
+                                color="secondary"
+                                variant="contained"
+                                onClick={() => {
+
+                                    setFlavors([...flavors, { id: flavorCounter + 1, flavor: 'Flavor' + (flavorCounter + 1), amount: 0 }]);
+                                    setFlavorCounter(flavorCounter + 1);
+                                    handleCalculate();
+                                }}>
+                                + Add
+                            </Button>
+                        </Box>
 
 
-            </Box>
 
-        </>
+                    </Box>
+                </Grid>
+
+                <Grid item sm={4}>
+                    <Box m={2}>
+                        <Alert icon={false} variant="filled" severity="info">
+                            Recipe
+                        </Alert>
+                        <TableContainer component={Paper}>
+                            <Table size="small" fullWidth>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Flavor</TableCell>
+                                        <TableCell>(%)</TableCell>
+                                        <TableCell>(ml)</TableCell>
+                                        <TableCell>(g)</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {recipe.map((row, i) => (
+                                        <TableRow key={row.id}>
+                                            <TableCell component="th" scope="row">{row.flavor}</TableCell>
+                                            <TableCell component="th" scope="row">{row.amount}</TableCell>
+                                            <TableCell component="th" scope="row">{row.ml}</TableCell>
+                                            <TableCell component="th" scope="row">{row.g}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
+                </Grid>
+            </Grid>
+
+
+
+        </Box>
+
     );
 }
 
