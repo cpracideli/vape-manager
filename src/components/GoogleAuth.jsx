@@ -1,6 +1,8 @@
 
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import  { Redirect } from 'react-router-dom'
+
 import * as AuthorizationAction from "../framework/redux/module/Authorization";
 import { GoogleLogin, GoogleLogout, } from 'react-google-login'
 import { Avatar, Button, Menu, MenuItem } from '@material-ui/core'
@@ -25,7 +27,8 @@ const GoogleAuth = ({ dispatch, isSignedIn, userId, userEmail, userFullName, use
     };
 
     const onSignOutClick = () => {
-        //dispatch(AuthorizationAction.signOut());
+        //return <Redirect to='/login'  />
+        dispatch(AuthorizationAction.signOut());
         //auth.signOut();
         //isSignedIn = false;
     };
@@ -40,7 +43,7 @@ const GoogleAuth = ({ dispatch, isSignedIn, userId, userEmail, userFullName, use
             return (
                 <div>
                     <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                        <Avatar alt="Remy Sharp" src={userPhotoUrl} />
+                        <Avatar alt={userFullName} src={userPhotoUrl} />
                     </Button>
                     <Menu
                         id="simple-menu"
@@ -49,7 +52,9 @@ const GoogleAuth = ({ dispatch, isSignedIn, userId, userEmail, userFullName, use
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={handleClose} disabled>Profile</MenuItem>
+                        <MenuItem onClick={handleClose}>
+                            <a href="https://myaccount.google.com/">Google Profile</a>
+                         </MenuItem>
                         <MenuItem onClick={handleClose}>
                             <GoogleLogout
                                 buttonText="Logout"
