@@ -23,7 +23,7 @@ const Juices = () => {
 
 
     useEffect(() => {
-        axios('http://localhost:3333/recipes').then(function(res){
+        axios('https://vape-tool.herokuapp.com/recipes').then(function(res){
             setJuices(res.data);
             console.log(res.data);
         });
