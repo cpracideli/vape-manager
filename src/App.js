@@ -8,6 +8,7 @@ import { Home } from './components/Home';
 import Flavors from './pages/Flavors';
 import Calculator from './pages/Calculator';
 import Juices from './pages/Juices';
+import Recipe from './pages/Juices/Recipe';
 import { ThemeProvider } from "@material-ui/core/styles";
 
 import { clearTheme } from './styles/themes'
@@ -38,6 +39,7 @@ const App = () => {
         {/* <Route exact path='/flavors' component={Flavors} /> */}
         <Route path='/calculator' component={Calculator} />
         <Route path='/juices' component={Juices} />
+        <Route path='/recipe/:juiceId' component={Recipe} />
         
         
       </Layout>
