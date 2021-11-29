@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Table, TableCell, TableContainer, TableHead, TableBody, TableRow, Button, Box, Card, CardActionArea, CardMedia, CardContent, CardActions, Paper, Typography } from '@material-ui/core'
 import { BsTrash } from 'react-icons/bs';
 import { FiShare } from 'react-icons/fi';
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
+import axios from 'axios';
 
 const useStyles = makeStyles({
     root: {
@@ -14,22 +16,26 @@ const useStyles = makeStyles({
     },
 });
 
-const Recipe = () => {
-    const classes = useStyles();
-    const recipe = {
-        id: 4,
-        name: "Mega Melon",
-        description: "Melon, Mango and Papaya",
-        rate: 2,
-        imgUrl: "https://static.libertyprim.com/files/familles/melon-large.jpg?1574629891",
-        owner: "cpracideli@gmail.com",
-        recipe: [
-            { flavor: "cantaloupe TPA", amount: 0.02 },
-            { flavor: "papaya TPA", amount: 0.015 },
-            { flavor: "mango TPA", amount: 0.03 }
-        ]
-    }
+const host = "https://vape-tool.herokuapp.com";
+const _host = "http://localhost:3333";
 
+const Recipe = () => {
+    const { juiceId } = useParams();
+    const [recipe, setRecipe] = useState({});
+    const [flavors, setFlavors] = useState([]);
+
+    useEffect(() => {
+        axios(`${host}/recipes/${juiceId}`).then(function (res) {
+            setRecipe(res.data);
+        });
+    }, juiceId);
+
+    useEffect(() => {
+        console.log(juiceId)
+        axios(`${host}/recipeFlavors/${juiceId}`).then(function (res) {
+            setFlavors(res.data);
+        });
+    }, juiceId);
 
     const renderStars = (stars) => {
         var object = [];
@@ -41,7 +47,6 @@ const Recipe = () => {
                 object.push(<AiOutlineStar color="orange" />)
             }
         }
-
         return (object)
     }
 
@@ -50,30 +55,42 @@ const Recipe = () => {
             <Paper elevation={5}>
 
                 <Box m={3}>
-                    <Typography variant="h5">{recipe.name} Recipe</Typography>
+                    <Box mt={2} >
+                        <Typography variant="h5">{recipe.name} Recipe {renderStars(recipe.owner_rating)}</Typography>
+
+                    </Box>
+                    <Box m={2}>
+                        <img src={recipe.img_url} width={200} />
+                    </Box>
+                    <Box m={2}>
+                        <Typography >{recipe.description}</Typography>
+                    </Box>
 
 
-                    <img src={recipe.imgUrl} height={300}></img>
-                    {renderStars(recipe.rate)}
-                    <TableContainer component={Paper}>
-                        <Table size="small" fullWidth>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Flavor</TableCell>
-                                    <TableCell>(%)</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {recipe.recipe.map((row, i) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell component="th" scope="row">{row.flavor}</TableCell>
-                                        <TableCell component="th" scope="row">{row.amount * 100}</TableCell>
+                    <Box m={5}>
+                        <TableContainer component={Paper} >
+                            <Table size="small" fullWidth>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Flavor</TableCell>
+                                        <TableCell>(%)</TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <a href="/calculator">Open in Calculator</a>
+                                </TableHead>
+                                <TableBody>
+                                    {flavors.map((row, i) => (
+                                        <TableRow key={row.id}>
+                                            <TableCell component="th" scope="row">{row.flavor}</TableCell>
+                                            <TableCell component="th" scope="row">{row.amount * 100}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
+                    <Box m={2}>
+                        <a href="/calculator">Open in Calculator</a>
+
+                    </Box>
 
                 </Box>
             </Paper>

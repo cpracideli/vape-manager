@@ -35,12 +35,11 @@ const App = () => {
       <Layout>
       <Route path='/login' component={Login} />
       <PrivateRoute authed={auth.isSignedIn} path='/flavors' component={Flavors} />
+      <PrivateRoute authed={auth.isSignedIn} path='/juices' component={Juices} />
+      <Route path='/recipe/:juiceId' component={Recipe} />
 
         {/* <Route exact path='/flavors' component={Flavors} /> */}
         <Route path='/calculator' component={Calculator} />
-        <Route path='/juices' component={Juices} />
-        <Route path='/recipe/:juiceId' component={Recipe} />
-        
         
       </Layout>
 
